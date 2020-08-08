@@ -63,7 +63,7 @@ class BlockUp(Module):
 
 class UNetModel(LightningModule):
     def __init__(self, hparams, n_channels, n_classes):
-        super(UNet, self).__init__()
+        super(UNetModel, self).__init__()
         self.hparams = hparams
         self.n_channels = n_channels
         self.n_classes = n_classes
