@@ -5,22 +5,33 @@ from argparse import ArgumentParser
 
 from pytorch_lightning import Trainer
 
-from datamodules import AnimeDataModule
-from models import UNetModel
-from constants import ANIME_DATAMODULE_ARGS_INFO, UNET_MODEL_ARGS_INFO
+from lib.constants import ANIME_DATAMODULE_ARGS_INFO, UNET_MODEL_ARGS_INFO
+from lib.datamodules import AnimeDataModule
+from lib.models import UNetModel
 
 
 def main(args):
+    dargs = vars(args)
+    for key in dargs:
+        print(key, dargs[key])
+
     model = UNetModel(
-        hparams=args,
+        learning_rate=args.learning_rate,
         n_channels=3,
         n_classes=2)
 
-    datamodule = AnimeDataModule()
-    datamodule.setup() #TODO setup or init
+    datamodule = AnimeDataModule(
+        batch_size=args.batch_size,
+        num_workers=args.num_workers)
+    datamodule.setup(
+        data_dir=args.data_dir,
+        test_size=args.test_size,
+        train_size=args.train_size,
+        val_size=args.val_size)
 
     trainer = Trainer.from_argparse_args(
         args=args,
+        auto_lr_find=True,
         logger=False)
     trainer.fit(
         model=model,

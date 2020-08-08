@@ -1,28 +1,38 @@
 from argparse import ArgumentParser
 
 from torch.utils.data import DataLoader, random_split
-from torchvision.transforms import ToTensor
+from torchvision.transforms import Compose, Normalize, ToTensor
 
 from pytorch_lightning import LightningDataModule
 
-#from datamodules import AnimeDataset
 from .anime_dataset import AnimeDataset
 
 
 class AnimeDataModule(LightningDataModule):
-    def __init__(self, data_dir, batch_size, num_workers):
+    def __init__(
+            self,
+            batch_size: int,
+            data_dir: str,
+            num_workers: int):
         super(AnimeDataModule, self).__init__()
         self.batch_size = batch_size
+        self.data_dir = data_dir
         self.num_workers = num_workers
+        self.transform = Compose([
+            ToTensor(),
+            Normalize((1, 1)), #TODO Normalize
+        ])
 
     def prepare_data(self):
         #TODO downloading data
         pass
 
-    def setup(self, data_dir, train_size, val_size, test_size):
+    def setup(self, train_size, val_size, test_size): #here we create datasets
         filenames = [str(p) for p in Path(data_dir).glob('*.png')]
 
-        train_val_test_dataset = AnimeDataset(filenames)
+        train_val_test_dataset = AnimeDataset(
+            filenames=filenames,
+            transform=self.transform)
         self.train_val_dataset, self.test_dataset = random_split(
             dataset=train_val_test_dataset,
             lengths=(train_size + val_size, test_size))

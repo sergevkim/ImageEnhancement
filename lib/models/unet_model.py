@@ -16,8 +16,11 @@ from pytorch_lightning import LightningModule
 
 
 class Block(Module):
-    def __init__(self, in_channels, out_channels):
-        super(Block, self).__init__()
+    def __init__(
+            self,
+            in_channels: int,
+            out_channels: int):
+        super().__init__()
         self.block = Sequential(
             Conv2d(
                 in_channels=in_channels,
@@ -32,8 +35,11 @@ class Block(Module):
 
 
 class BlockDown(Module):
-    def __init__(self, in_channels, out_channels):
-        super(BlockDown, self).__init__()
+    def __init__(
+            self,
+            in_channels: int,
+            out_channels: int):
+        super().__init__()
         self.block_down = Sequential(
             Block(in_channels=in_channels, out_channels=out_channels), #TODO mid_channels == in_channels // 2 == out_channels * 2
             Block(in_channels=out_channels, out_channels=out_channels),
@@ -44,8 +50,11 @@ class BlockDown(Module):
 
 
 class BlockUp(Module):
-    def __init__(self, in_channels, out_channels):
-        super(BlockDown, self).__init__()
+    def __init__(
+            self,
+            in_channels: int,
+            out_channels: int):
+        super().__init__()
         self.block_down = Sequential(
             Block(in_channels=in_channels, out_channels=out_channels),
             Block(in_channels=out_channels, out_channels=out_channels),
@@ -62,9 +71,13 @@ class BlockUp(Module):
 
 
 class UNetModel(LightningModule):
-    def __init__(self, hparams, n_channels, n_classes):
-        super(UNetModel, self).__init__()
-        self.hparams = hparams
+    def __init__(
+            self,
+            learning_rate: float,
+            n_channels: int,
+            n_classes: int):
+        super().__init__()
+        self.learning_rate = learning_rate
         self.n_channels = n_channels
         self.n_classes = n_classes
 
@@ -134,7 +147,7 @@ class UNetModel(LightningModule):
     def configure_optimizers(self):
         self.optimizer = Adam(
             params=self.parameters(),
-            lr=self.hparams['learning_rate'])
+            lr=self.learning_rate)
         self.scheduler = CosineAnnealingLR(optimizer=optimizer, T_max=10)
 
         return [self.optimizer], [self.scheduler]

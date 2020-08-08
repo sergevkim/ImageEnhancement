@@ -5,8 +5,9 @@ from torchvision.transforms import ToTensor
 
 
 class AnimeDataset(Dataset):
-    def __init__(self, filenames):
+    def __init__(self, filenames, transform=[ToTensor()]):
         self.filenames = filenames
+        self.transform = transform
 
     def __len__(self):
         return len(self.filenames)
@@ -14,7 +15,10 @@ class AnimeDataset(Dataset):
     def __getitem__(self, idx):
         img_filename = self.filenames[idx]
         img = Image.open(img_filename)
-        img = ToTensor()(img)
+
+        if self.transform:
+            img = self.transform(img)
+
         damaged_img = self.damaged(img)
 
         return (img, damaged_img)
