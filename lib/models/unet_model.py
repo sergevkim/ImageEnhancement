@@ -44,6 +44,7 @@ class BlockDown(Module):
             Block(in_channels=in_channels, out_channels=out_channels), #TODO mid_channels == in_channels // 2 == out_channels * 2
             Block(in_channels=out_channels, out_channels=out_channels),
             MaxPool2d(kernel_size=2, stride=2))
+        print('1111111111111111111', type(self.block_down))
 
     def forward(self, x):
         return self.block_down(x)
@@ -73,23 +74,27 @@ class BlockUp(Module):
 class UNetModel(LightningModule):
     def __init__(
             self,
+            lr: float,
             n_channels: int,
             n_classes: int):
         super().__init__()
+        self.lr = lr
         self.n_channels = n_channels
         self.n_classes = n_classes
 
-        block_down_1 = BlockDown(n_channels, 10),
-        block_down_2 = BlockDown(10, 20),
-        block_down_3 = BlockDown(20, 30)
-        block_down_4 = BlockDown(20, 30)
+        self.block_down_1 = BlockDown(n_channels, 10),
+        print('2222222222222', type(self.block_down_1))
+        self.block_down_2 = BlockDown(10, 20),
+        self.block_down_3 = BlockDown(20, 30)
+        self.block_down_4 = BlockDown(20, 30)
 
-        block_up_1 = BlockUp(40, 30)
-        block_up_2 = BlockUp(30, 20)
-        block_up_3 = BlockUp(20, 10)
-        block_up_4 = BlockUp(10, n_classes)
+        self.block_up_1 = BlockUp(40, 30)
+        self.block_up_2 = BlockUp(30, 20)
+        self.block_up_3 = BlockUp(20, 10)
+        self.block_up_4 = BlockUp(10, n_classes)
 
     def forward(self, x_0):
+        print('??????????????', len(self.block_down_1))
         x_1 = self.block_down_1(x_0)
         x_2 = self.block_down_2(x_1)
         x_3 = self.block_down_3(x_2)
@@ -145,8 +150,8 @@ class UNetModel(LightningModule):
     def configure_optimizers(self):
         self.optimizer = Adam(
             params=self.parameters(),
-            lr=self.learning_rate)
-        self.scheduler = CosineAnnealingLR(optimizer=optimizer, T_max=10)
+            lr=self.lr)
+        self.scheduler = CosineAnnealingLR(optimizer=self.optimizer, T_max=10)
 
         return [self.optimizer], [self.scheduler]
 

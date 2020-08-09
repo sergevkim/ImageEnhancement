@@ -11,7 +11,7 @@ ANIME_DATAMODULE_ARGS_INFO = {
         'type': str,
     },
     'num_workers': {
-        'default': 1,
+        'default': 4,
         'type': int,
     },
     'test_ratio': {

@@ -16,6 +16,7 @@ def main(args):
         print(key, dargs[key])
 
     model = UNetModel(
+        lr=3e-4,
         n_channels=3,
         n_classes=2)
 
@@ -30,14 +31,23 @@ def main(args):
 
     trainer = Trainer.from_argparse_args(
         args=args,
-        auto_lr_find=True,
+        auto_lr_find=args.auto_lr_find,
         logger=False)
+
+    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+    print(len(datamodule.train_dataloader()))
+    print(len(datamodule.val_dataloader()))
+
+    #lr_finder = trainer.lr_find(model)
+    #model.learning_rate = lr_finder.suggestion()
+
     trainer.fit(
         model=model,
-        train_dataloader=datamodule.train_dataloader,
-        val_dataloaders=datamodule.val_dataloader)
+        train_dataloader=datamodule.train_dataloader(),
+        val_dataloaders=datamodule.val_dataloader())
+    print('AAAAAABBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAA')
     trainer.test(
-        test_dataloaders=datamodule.test_dataloader,
+        test_dataloaders=datamodule.test_dataloader(),
         ckpt_path='best')
 
 

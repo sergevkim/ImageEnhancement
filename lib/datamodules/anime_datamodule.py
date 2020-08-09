@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from torch.utils.data import DataLoader, random_split
-from torchvision.transforms import Compose, Normalize, ToTensor
+from torchvision.transforms import Compose, Normalize, Resize, ToTensor
 
 from pytorch_lightning import LightningDataModule
 
@@ -20,6 +20,7 @@ class AnimeDataModule(LightningDataModule):
         self.data_dir = data_dir
         self.num_workers = num_workers
         self.transform = Compose([
+            Resize(size=64),
             ToTensor(),             #TODO Normalize
         ])
 
