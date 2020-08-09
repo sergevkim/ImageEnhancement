@@ -73,11 +73,9 @@ class BlockUp(Module):
 class UNetModel(LightningModule):
     def __init__(
             self,
-            learning_rate: float,
             n_channels: int,
             n_classes: int):
         super().__init__()
-        self.learning_rate = learning_rate
         self.n_channels = n_channels
         self.n_classes = n_classes
 

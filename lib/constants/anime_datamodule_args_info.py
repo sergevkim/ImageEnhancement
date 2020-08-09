@@ -14,16 +14,16 @@ ANIME_DATAMODULE_ARGS_INFO = {
         'default': 1,
         'type': int,
     },
-    'test_size': {
-        'default': 1000,
+    'test_ratio': {
+        'default': 0.1,
         'type': int,
     },
-    'train_size': {
-        'default': 7000,
+    'train_ratio': {
+        'default': 0.7,
         'type': int,
     },
-    'val_size': {
-        'default': 2000,
+    'val_ratio': {
+        'default': 0.2,
         'type': int,
     },
 }

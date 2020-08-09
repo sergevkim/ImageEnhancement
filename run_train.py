@@ -16,18 +16,17 @@ def main(args):
         print(key, dargs[key])
 
     model = UNetModel(
-        learning_rate=args.learning_rate,
         n_channels=3,
         n_classes=2)
 
     datamodule = AnimeDataModule(
         batch_size=args.batch_size,
+        data_dir=args.data_dir,
         num_workers=args.num_workers)
     datamodule.setup(
-        data_dir=args.data_dir,
-        test_size=args.test_size,
-        train_size=args.train_size,
-        val_size=args.val_size)
+        test_ratio=args.test_ratio,
+        train_ratio=args.train_ratio,
+        val_ratio=args.val_ratio)
 
     trainer = Trainer.from_argparse_args(
         args=args,
