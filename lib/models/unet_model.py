@@ -44,7 +44,6 @@ class BlockDown(Module):
             Block(in_channels=in_channels, out_channels=out_channels), #TODO mid_channels == in_channels // 2 == out_channels * 2
             Block(in_channels=out_channels, out_channels=out_channels),
             MaxPool2d(kernel_size=2, stride=2))
-        print('1111111111111111111', type(self.block_down))
 
     def forward(self, x):
         return self.block_down(x)
@@ -82,19 +81,20 @@ class UNetModel(LightningModule):
         self.n_channels = n_channels
         self.n_classes = n_classes
 
-        self.block_down_1 = BlockDown(n_channels, 10),
-        print('2222222222222', type(self.block_down_1))
-        self.block_down_2 = BlockDown(10, 20),
+        print(n_channels, self.n_channels)
+        self.block_down_0 = BlockDown(self.n_channels, 10)
+        self.block_down_1 = BlockDown(self.n_channels, 10)
+        self.block_down_2 = BlockDown(10, 20)
         self.block_down_3 = BlockDown(20, 30)
-        self.block_down_4 = BlockDown(20, 30)
+        self.block_down_4 = BlockDown(30, 40)
 
         self.block_up_1 = BlockUp(40, 30)
         self.block_up_2 = BlockUp(30, 20)
         self.block_up_3 = BlockUp(20, 10)
         self.block_up_4 = BlockUp(10, n_classes)
+        self.block = Block(3, 3)
 
     def forward(self, x_0):
-        print('??????????????', len(self.block_down_1))
         x_1 = self.block_down_1(x_0)
         x_2 = self.block_down_2(x_1)
         x_3 = self.block_down_3(x_2)
