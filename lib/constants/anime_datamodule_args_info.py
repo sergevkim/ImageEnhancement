@@ -7,7 +7,7 @@ ANIME_DATAMODULE_ARGS_INFO = {
         'type': int,
     },
     'data_dir': {
-        'default': f'{Path.cwd()}/data',
+        'default': f'{Path.cwd()}/data/images',
         'type': str,
     },
     'num_workers': {

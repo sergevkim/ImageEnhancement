@@ -33,6 +33,7 @@ class AnimeDataModule(LightningDataModule):
             test_ratio: float,
             train_ratio: float,
             val_ratio: float):   #here we create datasets for dataloaders
+        print(self.data_dir)
         filenames = [str(p) for p in Path(self.data_dir).glob('*.jpg')]
 
         train_val_test_dataset = AnimeDataset(
